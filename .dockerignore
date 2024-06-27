@@ -9,8 +9,8 @@
 app/__pycache__/
 app/*/__pycache__/
 app/*/*/__pycache__/
-app/*/*/__pycache__/
+app/*/*/*/__pycache__/
 .env/
-.venu/
-venu/
+.venv/
+venv/
 
