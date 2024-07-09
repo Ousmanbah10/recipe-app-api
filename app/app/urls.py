@@ -23,9 +23,6 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 
-# def home(request):
-#     return HttpResponse("Welcome to the Recipe API")
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
