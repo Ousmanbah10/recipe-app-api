@@ -1,5 +1,5 @@
-#HOW TO RUN THE FILE
 version: "3.9"
+
 services:
   app:
     build:
@@ -31,6 +31,7 @@ services:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=changeme
+      
 volumes:
   dev-db-data:
   dev-static-data:

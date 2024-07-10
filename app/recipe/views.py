@@ -1,6 +1,5 @@
-"""from django.shortcuts import render
+"""
 Views for the recipe APIs.
-# Create your views here.
 """
 
 from drf_spectacular.utils import (
@@ -56,7 +55,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return [int(str_id) for str_id in qs.split(",")]
 
     def get_queryset(self):
-        """Retrieve recipies for authenticated user."""
+        """Retrieve recipes for authenticated user."""
         tags = self.request.query_params.get("tags")
         ingredients = self.request.query_params.get("ingredients")
         queryset = self.queryset
@@ -68,7 +67,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(ingredients__id__in=ingredient_ids)
 
         return (
-            queryset.filter(user=self.request.user).order_by("-id").distinct()
+            queryset.filter(
+                user=self.request.user
+                ).order_by("-id").distinct()
         )
 
     def get_serializer_class(self):
@@ -143,8 +144,8 @@ class TagViewSet(BaseRecipeAttrViewSet):
     queryset = Tag.objects.all()
 
 
-class IngredientViewSets(BaseRecipeAttrViewSet):
-    """Manage Ingredients in the database."""
+class IngredientViewSet(BaseRecipeAttrViewSet):
+    """Manage ingredients in the database."""
 
     serializer_class = serializers.IngredientSerializer
     queryset = Ingredient.objects.all()

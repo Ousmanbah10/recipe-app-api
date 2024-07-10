@@ -166,7 +166,7 @@ class PrivateRecipeAPITests(TestCase):
             self.assertEqual(getattr(recipe, k), v)
 
     def test_update_user_returns_error(self):
-        """Tests changing the recipe user returns an error."""
+        """Test changing the recipe user returns an error."""
         new_user = create_user(email="user2@example.com", password="test123")
         recipe = create_recipe(user=self.user)
 
@@ -188,7 +188,7 @@ class PrivateRecipeAPITests(TestCase):
         self.assertFalse(Recipe.objects.filter(id=recipe.id).exists())
 
     def test_delete_other_users_recipe_error(self):
-        """Test trying to delete another user's recipe gives error."""
+        """Test trying to delete another user recipe gives error."""
         new_user = create_user(email="user2@example.com", password="test123")
         recipe = create_recipe(user=new_user)
 
@@ -307,8 +307,8 @@ class PrivateRecipeAPITests(TestCase):
             ).exists()
             self.assertTrue(exists)
 
-    def test_create_recipe_with_existing_ingredients(self):
-        """Test creating a recipe with existing ingredients."""
+    def test_create_recipe_with_existing_ingredient(self):
+        """Test creating a recipe with existing ingredient."""
         ingredient = Ingredient.objects.create(user=self.user, name="Lemon")
         payload = {
             "title": "Vietnamese Soup",

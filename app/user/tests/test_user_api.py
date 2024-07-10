@@ -21,7 +21,7 @@ def create_user(**params):
 
 
 class PublicUserApiTests(TestCase):
-    """Teste the public features of the user API."""
+    """Test the public features of the user API."""
 
     def setUp(self):
         self.client = APIClient()
@@ -76,7 +76,7 @@ class PublicUserApiTests(TestCase):
         create_user(**user_details)
 
         payload = {
-            "username": user_details["email"],
+            "email": user_details["email"], ##
             "password": user_details["password"],
         }
         res = self.client.post(TOKEN_URL, payload)
@@ -95,19 +95,18 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_token_blank_password(self):
-        """Test posting a balnk password returs an error"""
-        create_user(email="test@example.com", password="goodpass")
+        """Test posting a blank password returs an error"""
 
-        payload = {"email": "test@exmaple.com", "password": ""}
+        payload = {"email": "test@example.com", "password": ""}
         res = self.client.post(TOKEN_URL, payload)
 
         self.assertNotIn("token", res.data)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_retreve_user_unathorized(self):
+    def test_retrieve_user_unauthorized(self):
         """Test authentication is required for users."""
-
         res = self.client.get(ME_URL)
+
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
@@ -124,26 +123,26 @@ class PrivateUserApiTests(TestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_retrieve_profile_success(self):
-        """Tets retriveing profile for lgged in user"""
+        """Tests retrieving profile for logged in user"""
         res = self.client.get(ME_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(
-            res.data,
-            {
+        self.assertEqual(res.data,{
+
+
                 "name": self.user.name,
                 "email": self.user.email,
             },
         )
 
     def test_post_me_not_allowed(self):
-        """Test POST is not allowed for the end Point."""
+        """Test POST is not allowed for the me end Point."""
         res = self.client.post(ME_URL, {})
 
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_update_user_profile(self):
-        """TEst updating the user profile for the authenticated user"""
+        """Test updating the user profile for the authenticated user"""
         payload = {"name": "Updated name", "password": "newpassword123"}
 
         res = self.client.patch(ME_URL, payload)

@@ -12,7 +12,7 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Serializer for the user object"""
+    """Serializer for the user object."""
 
     class Meta:
         model = get_user_model()
@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
         return get_user_model().objects.create_user(**validated_data)
 
     def update(self, instance, validated_data):
-        """Update and return user"""
+        """Update and return user."""
         password = validated_data.pop("password", None)
         user = super().update(instance, validated_data)
 
@@ -40,7 +40,7 @@ class AuthTokenSerializer(serializers.Serializer):
 
     email = serializers.EmailField()
     password = serializers.CharField(
-        style={"input_type": "password"}, trim_whitespace=False
+        style={"input_type": "password"}, trim_whitespace=False,
     )
 
     def validate(self, attrs):
