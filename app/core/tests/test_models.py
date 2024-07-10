@@ -1,9 +1,9 @@
-""" 
+"""
 Tests for models
 """
 
 from unittest.mock import patch
-from django.conf import settings
+
 from decimal import Decimal
 
 from django.test import TestCase
