@@ -1,6 +1,7 @@
 """
 Database models.
 """
+
 import uuid
 import os
 
@@ -46,6 +47,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """User in the system."""
+
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
@@ -58,6 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Recipe(models.Model):
     """Recipe object."""
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -77,6 +80,7 @@ class Recipe(models.Model):
 
 class Tag(models.Model):
     """Tag for filtering recipes."""
+
     name = models.CharField(max_length=255)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -89,6 +93,7 @@ class Tag(models.Model):
 
 class Ingredient(models.Model):
     """Ingredient for recipe."""
+
     name = models.CharField(max_length=255)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

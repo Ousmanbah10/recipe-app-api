@@ -1,6 +1,7 @@
 """
 Test for the ingredients API.
 """
+
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
@@ -21,7 +22,7 @@ def detail_url(ingredient_id):
     return reverse("recipe:ingredient-detail", args=[ingredient_id])
 
 
-def create_user(email='user@example.com', password='testpass123'):
+def create_user(email="user@example.com", password="testpass123"):
     """Create and return user."""
     return get_user_model().objects.create_user(email=email, password=password)
 
@@ -48,44 +49,44 @@ class PrivateIngredientsApiTests(TestCase):
 
     def test_retrieve_ingredients(self):
         """Test retrieving a list of ingredients."""
-        Ingredient.objects.create(user=self.user, name='Kale')
-        Ingredient.objects.create(user=self.user, name='Vanilla')
+        Ingredient.objects.create(user=self.user, name="Kale")
+        Ingredient.objects.create(user=self.user, name="Vanilla")
 
         res = self.client.get(INGREDIENTS_URL)
 
-        ingredients = Ingredient.objects.all().order_by('-name')
+        ingredients = Ingredient.objects.all().order_by("-name")
         serializer = IngredientSerializer(ingredients, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
 
     def test_ingredients_are_limited_to_user(self):
         """Test that ingredients for the authenticated user are returned."""
-        user2 = create_user(email='user2@example.com')
-        Ingredient.objects.create(user=user2, name='Salt')
-        ingredient = Ingredient.objects.create(user=self.user, name='Pepper')
+        user2 = create_user(email="user2@example.com")
+        Ingredient.objects.create(user=user2, name="Salt")
+        ingredient = Ingredient.objects.create(user=self.user, name="Pepper")
 
         res = self.client.get(INGREDIENTS_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
-        self.assertEqual(res.data[0]['name'], ingredient.name)
-        self.assertEqual(res.data[0]['id'], ingredient.id)
+        self.assertEqual(res.data[0]["name"], ingredient.name)
+        self.assertEqual(res.data[0]["id"], ingredient.id)
 
     def test_update_ingredient(self):
         """Test updating an ingredient."""
-        ingredient = Ingredient.objects.create(user=self.user, name='Cilantro')
+        ingredient = Ingredient.objects.create(user=self.user, name="Cilantro")
 
-        payload = {'name': 'Coriander'}
+        payload = {"name": "Coriander"}
         url = detail_url(ingredient.id)
         res = self.client.patch(url, payload)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         ingredient.refresh_from_db()
-        self.assertEqual(ingredient.name, payload['name'])
+        self.assertEqual(ingredient.name, payload["name"])
 
     def test_delete_ingredient(self):
         """Test deleting an ingredient."""
-        ingredient = Ingredient.objects.create(user=self.user, name='Lettuce')
+        ingredient = Ingredient.objects.create(user=self.user, name="Lettuce")
 
         url = detail_url(ingredient.id)
         res = self.client.delete(url)
@@ -96,17 +97,17 @@ class PrivateIngredientsApiTests(TestCase):
 
     def test_filter_ingredients_assigned_to_recipes(self):
         """Test filtering ingredients by those assigned to recipes."""
-        ingredient1 = Ingredient.objects.create(user=self.user, name='Apples')
-        ingredient2 = Ingredient.objects.create(user=self.user, name='Turkey')
+        ingredient1 = Ingredient.objects.create(user=self.user, name="Apples")
+        ingredient2 = Ingredient.objects.create(user=self.user, name="Turkey")
         recipe = Recipe.objects.create(
-            title='Apple Crumble',
+            title="Apple Crumble",
             time_minutes=5,
-            price=Decimal('4.50'),
-            user=self.user
+            price=Decimal("4.50"),
+            user=self.user,
         )
         recipe.ingredients.add(ingredient1)
 
-        res = self.client.get(INGREDIENTS_URL, {'assigned_only': 1})
+        res = self.client.get(INGREDIENTS_URL, {"assigned_only": 1})
 
         serializer1 = IngredientSerializer(ingredient1)
         serializer2 = IngredientSerializer(ingredient2)
@@ -116,22 +117,22 @@ class PrivateIngredientsApiTests(TestCase):
 
     def test_filter_ingredients_unique(self):
         """Test filtered ingredients return a unique list."""
-        ingredient = Ingredient.objects.create(user=self.user, name='Eggs')
-        Ingredient.objects.create(user=self.user, name='Lentils')
+        ingredient = Ingredient.objects.create(user=self.user, name="Eggs")
+        Ingredient.objects.create(user=self.user, name="Lentils")
         recipe1 = Recipe.objects.create(
-            title='Egg Benedict',
+            title="Egg Benedict",
             time_minutes=60,
-            price=Decimal('7.00'),
+            price=Decimal("7.00"),
             user=self.user,
         )
         recipe2 = Recipe.objects.create(
-            title='Herb Eggs',
+            title="Herb Eggs",
             time_minutes=20,
-            price=Decimal('4.00'),
+            price=Decimal("4.00"),
             user=self.user,
         )
         recipe1.ingredients.add(ingredient)
         recipe2.ingredients.add(ingredient)
 
-        res = self.client.get(INGREDIENTS_URL, {'assigned_only': 1})
+        res = self.client.get(INGREDIENTS_URL, {"assigned_only": 1})
         self.assertEqual(len(res.data), 1)
