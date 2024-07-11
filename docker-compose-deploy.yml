@@ -1,11 +1,10 @@
 version: "3.9"
-
 services:
   app:
     build:
-      contex: .
+      context: .
     restart: always
-    voulmes:
+    volumes:
       - static-data:/vol/web
     environment:
       - DB_HOST=db
@@ -18,24 +17,23 @@ services:
       - db
   db:
     image: postgres:13-alpine
-    restart : always
+    restart: always
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
-     - POSTGRES=${DB_NAME}
-     - POSTGRES=${DB_USER}
-     - POSTGRES_PASSWORD=${DB_PASS}
-
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
   proxy:
     build:
-      contex: ./proxy
+      context: ./proxy
     restart: always
     depends_on:
       - app
     ports:
-      -80:8000
+      - 80:8000
     volumes:
-      -static-data:/vol/static 
-  volumes:
-    postgres-data:
-    static.data:        
+      - static-data:/vol/static
+volumes:
+  postgres-data:
+  static-data:

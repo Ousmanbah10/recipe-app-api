@@ -1,5 +1,5 @@
 """
-Tetest for the django admin modifications.
+Tests for the django admin modifications.
 """
 
 from django.test import TestCase
@@ -23,7 +23,7 @@ class AdminSiteTests(TestCase):
         )
 
     def test_users_list(self):
-        """Test taht users are listed on page."""
+        """Test that users are listed on page."""
         url = reverse("admin:core_user_changelist")
         res = self.client.get(url)
 

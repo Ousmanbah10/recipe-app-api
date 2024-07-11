@@ -1,5 +1,5 @@
 FROM nginxinc/nginx-unprivileged:latest
-LABEL maintainer=linkedin.com/in/ousman-bah-275373257
+LABEL maintainer="londonappdeveloper.com"
 
 COPY ./default.conf.tpl /etc/nginx/default.conf.tpl
 COPY ./uwsgi_params /etc/nginx/uwsgi_params
@@ -22,4 +22,3 @@ VOLUME /vol/static
 USER nginx
 
 CMD ["/run.sh"]
-
